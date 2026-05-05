@@ -6,7 +6,8 @@
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<link rel="icon" href="/favicon.ico" />
 		<meta name="generator" content={Astro.generator} />
-		<title>Astro Basics</title>
+		<meta name="description" content="Mockup für ein einfaches Event-Buchungs-Tool mit Event-Listings und Admin-Bereich." />
+		<title>Eventify — Event Booking Mockup</title>
 	</head>
 	<body>
 		<slot />
@@ -19,5 +20,13 @@
 		margin: 0;
 		width: 100%;
 		height: 100%;
+		font-family: Inter, system-ui, sans-serif;
+		background: radial-gradient(circle at top, rgba(99, 102, 241, 0.15), transparent 30%),
+			linear-gradient(180deg, #0b1120 0%, #111827 100%);
+		color: #f8fafc;
+	}
+
+	body {
+		min-height: 100vh;
 	}
 </style>
