@@ -1,465 +1,930 @@
 ---
+const events = [
+	{
+		id: 'pipeline-sicherheit',
+		type: 'Fachkonferenz',
+		title: 'Pipeline-Sicherheit 2026',
+		date: '24. Mai 2026',
+		time: '18:00',
+		location: 'Zürich, Energieforum',
+		price: 'gratis',
+		capacity: 48,
+		booked: 36,
+		status: 'Noch 12 Plätze',
+		format: 'Vor Ort',
+		description:
+			'Strategien für Leckageerkennung, Wartung und digitale Überwachung von Gasinfrastruktur.',
+		agenda: ['Keynote Sicherheitslage', 'Praxisfälle Sensorik', 'Q&A mit Netzbetreibern'],
+		participants: [
+			{ name: 'Mira Keller', company: 'Gasnetz Zürich', status: 'bestätigt' },
+			{ name: 'Jonas Frei', company: 'EnerFlux AG', status: 'bestätigt' },
+			{ name: 'Claudia Meier', company: 'RegioGas Ost', status: 'wartet' },
+		],
+	},
+	{
+		id: 'smart-gas-networks',
+		type: 'Roundtable',
+		title: 'Smart Gas Networks',
+		date: '28. Mai 2026',
+		time: '20:00',
+		location: 'Basel, Smart Utility Hub',
+		price: 'CHF 119 .-',
+		capacity: 26,
+		booked: 22,
+		status: 'Begrenzt verfügbar',
+		format: 'Vor Ort',
+		description:
+			'Diskussion zu digitaler Vernetzung von Gasnetz, IoT-Sensorik und Energiemanagement.',
+		agenda: ['IoT-Impuls', 'Moderierte Diskussion', 'Networking-Apéro'],
+		participants: [
+			{ name: 'Luca Steiner', company: 'UtilityWorks', status: 'bestätigt' },
+			{ name: 'Nina Vogt', company: 'SensorGrid', status: 'bestätigt' },
+			{ name: 'Rafael Schmid', company: 'Stadtwerke Bern', status: 'bestätigt' },
+		],
+	},
+	{
+		id: 'gashandel-marktanalyse',
+		type: 'Hybrid Event',
+		title: 'Gashandel & Marktanalyse',
+		date: '31. Mai 2026',
+		time: '16:00',
+		location: 'Online + Winterthur',
+		price: 'CHF 39 .-',
+		capacity: 120,
+		booked: 74,
+		status: 'Online + vor Ort',
+		format: 'Hybrid',
+		description:
+			'Analyse von Markttrends, Kapazitätsplanung und Preisentwicklung im EU-Gassektor.',
+		agenda: ['Marktüberblick', 'Preis-Szenarien', 'Kapazitätsplanung'],
+		participants: [
+			{ name: 'Sven Berger', company: 'TradeScope', status: 'bestätigt' },
+			{ name: 'Aylin Yilmaz', company: 'GasHub Europe', status: 'bestätigt' },
+			{ name: 'Theo Graf', company: 'NordKap Energie', status: 'wartet' },
+		],
+	},
+];
 ---
 
-<div class="page-shell">
-<div class="hero-panel">
-<div class="hero-copy">
-<p class="eyebrow">Event-Buchungstool Demo</p>
-<h1>GasConnect</h1>
-<p class="hero-text">
-Ein Mockup für ein einfaches Event-Buchungs-Tool mit Fokus auf Gasversorgung, Pipeline-Management
-und Branchentreffen der Energiebranche.
-</p>
-<div class="hero-actions">
-<a class="cta-button" href="#events">Events ansehen</a>
-<a class="secondary-button" href="#admin">Admin-Bereich</a>
-</div>
+<div class="page-shell" data-event-app>
+	<header class="app-header">
+		<div>
+			<p class="eyebrow">Event-Buchungstool Demo</p>
+			<h1>GasConnect</h1>
+			<p class="hero-text">
+				Ein klickbarer Prototyp für Events, Teilnehmerlisten und einfache Admin-Abläufe in der
+				Energiebranche.
+			</p>
+		</div>
+		<nav class="quick-nav" aria-label="Bereiche">
+			<a href="#events">Events</a>
+			<a href="#details">Details</a>
+			<a href="#admin">Admin</a>
+		</nav>
+	</header>
+
+	<main class="workspace">
+		<section id="events" class="event-column" aria-labelledby="events-title">
+			<div class="section-header compact">
+				<p class="section-label">Branchenevents Gasversorgung</p>
+				<h2 id="events-title">Events</h2>
+			</div>
+
+			<div class="grid-list" data-event-list>
+				{
+					events.map((event, index) => (
+						<button
+							class={`event-card ${index === 1 ? 'highlighted' : ''}`}
+							type="button"
+							data-event-card
+							data-event-id={event.id}
+						>
+							<span class="event-type">{event.type}</span>
+							<strong>{event.title}</strong>
+							<span class="event-description">{event.description}</span>
+							<span class="event-details">
+								<span>
+									{event.date} · {event.time}
+								</span>
+								<span>{event.price}</span>
+							</span>
+							<span class="event-status">
+								<span class={`pill ${event.booked / event.capacity > 0.8 ? 'limited' : 'available'}`}>
+									{event.status}
+								</span>
+								<span class="action-link">Details öffnen</span>
+							</span>
+						</button>
+					))
+				}
+			</div>
+		</section>
+
+		<section id="details" class="detail-panel" aria-live="polite">
+			<div class="panel-header">
+				<div>
+					<p class="section-label" data-detail-type>{events[0].type}</p>
+					<h2 data-detail-title>{events[0].title}</h2>
+				</div>
+				<span class="pill available" data-detail-status>{events[0].status}</span>
+			</div>
+
+			<p class="detail-copy" data-detail-description>{events[0].description}</p>
+
+			<div class="stat-grid">
+				<div>
+					<span data-detail-date>{events[0].date}</span>
+					<p>Datum</p>
+				</div>
+				<div>
+					<span data-detail-time>{events[0].time}</span>
+					<p>Start</p>
+				</div>
+				<div>
+					<span data-detail-price>{events[0].price}</span>
+					<p>Preis</p>
+				</div>
+				<div>
+					<span data-detail-seats>{events[0].capacity - events[0].booked}</span>
+					<p>Freie Plätze</p>
+				</div>
+			</div>
+
+			<div class="detail-split">
+				<div>
+					<h3>Agenda</h3>
+					<ul class="agenda-list" data-detail-agenda>
+						{events[0].agenda.map((item) => <li>{item}</li>)}
+					</ul>
+				</div>
+				<div>
+					<h3>Teilnehmerliste</h3>
+					<ul class="participant-list" data-detail-participants>
+						{
+							events[0].participants.map((participant) => (
+								<li>
+									<span>{participant.name}</span>
+									<small>
+										{participant.company} · {participant.status}
+									</small>
+								</li>
+							))
+						}
+					</ul>
+				</div>
+			</div>
+		</section>
+	</main>
+
+	<section id="admin" class="admin-block" aria-labelledby="admin-title">
+		<div class="section-header">
+			<p class="section-label">Admin-Dashboard</p>
+			<h2 id="admin-title">Events bearbeiten und erstellen</h2>
+			<p class="section-copy">
+				Änderungen werden im Prototyp direkt in der Oberfläche sichtbar und bleiben lokal in dieser
+				Sitzung.
+			</p>
+		</div>
+
+		<div class="admin-grid">
+			<form class="admin-form" data-admin-form>
+				<input type="hidden" name="id" value={events[0].id} />
+
+				<label>
+					Event auswählen
+					<select name="selectedEvent" data-admin-select>
+						{events.map((event) => <option value={event.id}>{event.title}</option>)}
+					</select>
+				</label>
+
+				<div class="form-row">
+					<label>
+						Titel
+						<input name="title" value={events[0].title} required />
+					</label>
+					<label>
+						Typ
+						<input name="type" value={events[0].type} required />
+					</label>
+				</div>
+
+				<div class="form-row">
+					<label>
+						Datum
+						<input name="date" value={events[0].date} required />
+					</label>
+					<label>
+						Start
+						<input name="time" value={events[0].time} required />
+					</label>
+				</div>
+
+				<div class="form-row">
+					<label>
+						Preis
+						<input name="price" value={events[0].price} required />
+					</label>
+					<label>
+						Kapazität
+						<input name="capacity" type="number" min="1" value={events[0].capacity} required />
+					</label>
+				</div>
+
+				<label>
+					Ort
+					<input name="location" value={events[0].location} required />
+				</label>
+
+				<label>
+					Beschreibung
+					<textarea name="description" rows="4" required>{events[0].description}</textarea>
+				</label>
+
+				<div class="button-row">
+					<button class="cta-button" type="submit">Speichern</button>
+					<button class="secondary-button" type="button" data-new-event>Neuer Event</button>
+				</div>
+			</form>
+
+			<aside class="admin-summary">
+				<h3>Übersicht</h3>
+				<div class="metric-row">
+					<div>
+						<span data-total-reservations>132</span>
+						<p>Reservierungen</p>
+					</div>
+					<div>
+						<span data-total-events>{events.length}</span>
+						<p>Events</p>
+					</div>
+					<div>
+						<span data-total-capacity>194</span>
+						<p>Plätze</p>
+					</div>
+				</div>
+				<div class="activity-feed">
+					<h4>Letzte Aktivität</h4>
+					<ul data-activity-feed>
+						<li>Pipeline-Sicherheit 2026 aktualisiert</li>
+						<li>3 neue Reservierungen importiert</li>
+						<li>Smart Gas Networks fast ausgebucht</li>
+					</ul>
+				</div>
+			</aside>
+		</div>
+	</section>
 </div>
 
-<div class="hero-preview">
-<div class="preview-card">
-<span class="badge">Demo</span>
-<h2>Nutze den visuellen Prototyp</h2>
-<p>Zeige Event-Highlights, Verfügbarkeit und wichtige Admin-Informationen, ohne Backend.</p>
-<ul>
-<li>Eventlisting mit Preisen</li>
-<li>Live-Status und Verfügbarkeit</li>
-<li>Admin-Bereich für Event-Updates</li>
-<li>Mobile und Desktop Mockup</li>
-</ul>
-</div>
-</div>
-</div>
+<script define:vars={{ initialEvents: events }}>
+	const events = structuredClone(initialEvents);
+	const app = document.querySelector('[data-event-app]');
+	const eventList = app?.querySelector('[data-event-list]');
+	const adminForm = app?.querySelector('[data-admin-form]');
+	const adminSelect = app?.querySelector('[data-admin-select]');
+	const activityFeed = app?.querySelector('[data-activity-feed]');
+	let activeEventId = events[0].id;
 
-<section id="events" class="section-block">
-<div class="section-header">
-<p class="section-label">Branchenevents Gasversorgung</p>
-<h2>Unsere wichtigsten Gas- & Energieveranstaltungen</h2>
-<p class="section-copy">
-Durchsuche Events aus der Gasbranche, entdecke Fachkonferenzen und buche deinen Platz für
-Netzwerk und Austausch. Dieses Mockup zeigt das Erlebnis, ohne echte Buchungslogik.
-</p>
-</div>
+	const participantNames = [
+		['Lea Brunner', 'SwissGas Control'],
+		['Marc Widmer', 'Netzwerk Energie'],
+		['Sofia Roth', 'TransitGas AG'],
+		['David Amrein', 'Alpine Utility'],
+	];
 
-<div class="grid-list">
-<article class="event-card">
-<div class="event-meta">
-<span>Fachkonferenz</span>
-<strong>Pipeline-Sicherheit 2026</strong>
-</div>
-<p class="event-description">Strategien für Leckageerkennung, Wartung und digitale Überwachung von Gasinfrastruktur.</p>
-<div class="event-details">
-<span>24. Mai · 18:00</span>
-<span>89 €</span>
-</div>
-<div class="event-status">
-<span class="pill available">Noch 12 Plätze</span>
-<a class="action-link" href="#">Ticket reservieren</a>
-</div>
-</article>
+	function getActiveEvent() {
+		return events.find((event) => event.id === activeEventId) ?? events[0];
+	}
 
-<article class="event-card highlighted">
-<div class="event-meta">
-<span>Roundtable</span>
-<strong>Smart Gas Networks</strong>
-</div>
-<p class="event-description">Diskussion zu digitaler Vernetzung von Gasnetz, IoT-Sensorik und Energiemanagement.</p>
-<div class="event-details">
-<span>28. Mai · 20:00</span>
-<span>119 €</span>
-</div>
-<div class="event-status">
-<span class="pill sold">Begrenzt verfügbar</span>
-<a class="action-link" href="#">Jetzt Platz sichern</a>
-</div>
-</article>
+	function getAvailabilityClass(event) {
+		return event.booked / event.capacity > 0.8 ? 'limited' : 'available';
+	}
 
-<article class="event-card">
-<div class="event-meta">
-<span>Hybrid Event</span>
-<strong>Gashandel & Marktanalyse</strong>
-</div>
-<p class="event-description">Analyse von Markttrends, Kapazitätsplanung und Preisentwicklung im EU-Gassektor.</p>
-<div class="event-details">
-<span>31. Mai · 16:00</span>
-<span>39 €</span>
-</div>
-<div class="event-status">
-<span class="pill available">Online + vor Ort</span>
-<a class="action-link" href="#">Mehr erfahren</a>
-</div>
-</article>
-</div>
-</section>
+	function slugify(value) {
+		return value
+			.toLowerCase()
+			.normalize('NFD')
+			.replace(/[\u0300-\u036f]/g, '')
+			.replace(/[^a-z0-9]+/g, '-')
+			.replace(/^-|-$/g, '');
+	}
 
-<section id="admin" class="section-block admin-block">
-<div class="section-header">
-<p class="section-label">Admin-Dashboard</p>
-<h2>Veranstaltungen schnell bearbeiten</h2>
-<p class="section-copy">
-Ein teasender Admin-Bereich zeigt, wie Eventdaten, Reservierungen und Kapazitäten gepflegt werden können.
-</p>
-</div>
+	function escapeHtml(value) {
+		return value
+			.toString()
+			.replaceAll('&', '&amp;')
+			.replaceAll('<', '&lt;')
+			.replaceAll('>', '&gt;')
+			.replaceAll('"', '&quot;')
+			.replaceAll("'", '&#039;');
+	}
 
-<div class="admin-grid">
-<div class="admin-card">
-<h3>Event bearbeiten</h3>
-<p>Update Titel, Datum, Preis und Verfügbarkeit für Gasversorgungs-Events mit einer klaren Oberfläche.</p>
-<ul>
-<li>Event-Status</li>
-<li>Preis & Kapazität</li>
-<li>Beschreibungen</li>
-</ul>
-<a class="action-link" href="#">Event bearbeiten</a>
-</div>
+	function renderEventList() {
+		if (!eventList) return;
 
-<div class="admin-card">
-<h3>Reservierungen</h3>
-<p>Behalte den Überblick über Buchungen, Abmeldungen und Gästelisten.</p>
-<ul>
-<li>Letzte Buchungen</li>
-<li>Status-Updates</li>
-<li>Teilnehmer-Statistik</li>
-</ul>
-<a class="action-link" href="#">Reservierungen ansehen</a>
-</div>
+		eventList.innerHTML = events
+			.map(
+				(event) => `
+					<button class="event-card ${event.id === activeEventId ? 'is-active' : ''}" type="button" data-event-card data-event-id="${event.id}">
+						<span class="event-type">${escapeHtml(event.type)}</span>
+						<strong>${escapeHtml(event.title)}</strong>
+						<span class="event-description">${escapeHtml(event.description)}</span>
+						<span class="event-details">
+							<span>${escapeHtml(event.date)} · ${escapeHtml(event.time)}</span>
+							<span>${escapeHtml(event.price)}</span>
+						</span>
+						<span class="event-status">
+							<span class="pill ${getAvailabilityClass(event)}">${escapeHtml(event.status)}</span>
+							<span class="action-link">Details öffnen</span>
+						</span>
+					</button>
+				`,
+			)
+			.join('');
+	}
 
-<div class="admin-card summary-card">
-<h3>Dashboard-Vorschau</h3>
-<div class="metric-row">
-<div>
-<span>120+</span>
-<p>Reservierungen</p>
-</div>
-<div>
-<span>4</span>
-<p>Geplante Events</p>
-</div>
-<div>
-<span>95%</span>
-<p>Auslastung</p>
-</div>
-</div>
-<p class="small-copy">Admins können hier neue Events veröffentlichen oder bestehende Buchungen verwalten.</p>
-</div>
-</div>
-</section>
-</div>
+	function renderDetails() {
+		const event = getActiveEvent();
+		const freeSeats = Math.max(event.capacity - event.booked, 0);
+
+		app.querySelector('[data-detail-type]').textContent = event.type;
+		app.querySelector('[data-detail-title]').textContent = event.title;
+		app.querySelector('[data-detail-description]').textContent = event.description;
+		app.querySelector('[data-detail-date]').textContent = event.date;
+		app.querySelector('[data-detail-time]').textContent = event.time;
+		app.querySelector('[data-detail-price]').textContent = event.price;
+		app.querySelector('[data-detail-seats]').textContent = freeSeats;
+
+		const status = app.querySelector('[data-detail-status]');
+		status.textContent = event.status;
+		status.className = `pill ${getAvailabilityClass(event)}`;
+
+		app.querySelector('[data-detail-agenda]').innerHTML = event.agenda
+			.map((item) => `<li>${escapeHtml(item)}</li>`)
+			.join('');
+
+		app.querySelector('[data-detail-participants]').innerHTML = event.participants
+			.map(
+				(participant) => `
+					<li>
+						<span>${escapeHtml(participant.name)}</span>
+						<small>${escapeHtml(participant.company)} · ${escapeHtml(participant.status)}</small>
+					</li>
+				`,
+			)
+			.join('');
+	}
+
+	function renderAdminOptions() {
+		if (!adminSelect) return;
+
+		adminSelect.innerHTML = events
+			.map((event) => `<option value="${event.id}">${escapeHtml(event.title)}</option>`)
+			.join('');
+		adminSelect.value = activeEventId;
+	}
+
+	function fillAdminForm(event) {
+		if (!adminForm) return;
+
+		adminForm.elements.id.value = event.id;
+		adminForm.elements.selectedEvent.value = event.id;
+		adminForm.elements.title.value = event.title;
+		adminForm.elements.type.value = event.type;
+		adminForm.elements.date.value = event.date;
+		adminForm.elements.time.value = event.time;
+		adminForm.elements.price.value = event.price;
+		adminForm.elements.capacity.value = event.capacity;
+		adminForm.elements.location.value = event.location;
+		adminForm.elements.description.value = event.description;
+	}
+
+	function renderSummary() {
+		app.querySelector('[data-total-events]').textContent = events.length;
+		app.querySelector('[data-total-reservations]').textContent = events.reduce(
+			(total, event) => total + event.booked,
+			0,
+		);
+		app.querySelector('[data-total-capacity]').textContent = events.reduce(
+			(total, event) => total + event.capacity,
+			0,
+		);
+	}
+
+	function addActivity(text) {
+		if (!activityFeed) return;
+
+		const item = document.createElement('li');
+		item.textContent = text;
+		activityFeed.prepend(item);
+
+		while (activityFeed.children.length > 4) {
+			activityFeed.lastElementChild?.remove();
+		}
+	}
+
+	function syncView() {
+		renderEventList();
+		renderDetails();
+		renderAdminOptions();
+		fillAdminForm(getActiveEvent());
+		renderSummary();
+	}
+
+	eventList?.addEventListener('click', (event) => {
+		const card = event.target.closest('[data-event-card]');
+		if (!card) return;
+
+		activeEventId = card.dataset.eventId;
+		syncView();
+		document.querySelector('#details')?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+	});
+
+	adminSelect?.addEventListener('change', (event) => {
+		activeEventId = event.target.value;
+		syncView();
+	});
+
+	adminForm?.addEventListener('submit', (event) => {
+		event.preventDefault();
+		const form = new FormData(adminForm);
+		const currentEvent = getActiveEvent();
+
+		currentEvent.title = form.get('title').toString();
+		currentEvent.type = form.get('type').toString();
+		currentEvent.date = form.get('date').toString();
+		currentEvent.time = form.get('time').toString();
+		currentEvent.price = form.get('price').toString();
+		currentEvent.capacity = Number(form.get('capacity'));
+		currentEvent.location = form.get('location').toString();
+		currentEvent.description = form.get('description').toString();
+		currentEvent.status =
+			currentEvent.capacity - currentEvent.booked <= 6 ? 'Begrenzt verfügbar' : `Noch ${currentEvent.capacity - currentEvent.booked} Plätze`;
+
+		addActivity(`${currentEvent.title} gespeichert`);
+		syncView();
+	});
+
+	app?.querySelector('[data-new-event]')?.addEventListener('click', () => {
+		const nextNumber = events.length + 1;
+		const newEvent = {
+			id: `neuer-event-${Date.now()}`,
+			type: 'Workshop',
+			title: `Neuer GasConnect Event ${nextNumber}`,
+			date: '06. Juni 2026',
+			time: '17:30',
+			location: 'Luzern, Energie Campus',
+			price: 'CHF 59 .-',
+			capacity: 40,
+			booked: 0,
+			status: 'Noch 40 Plätze',
+			format: 'Vor Ort',
+			description: 'Frisch angelegter Demo-Event, der direkt bearbeitet werden kann.',
+			agenda: ['Begrüssung', 'Fachinput', 'Austausch'],
+			participants: participantNames.slice(0, 2).map(([name, company]) => ({
+				name,
+				company,
+				status: 'eingeladen',
+			})),
+		};
+
+		newEvent.id = `${slugify(newEvent.title)}-${Date.now().toString().slice(-4)}`;
+		events.push(newEvent);
+		activeEventId = newEvent.id;
+		addActivity(`${newEvent.title} erstellt`);
+		syncView();
+		document.querySelector('#admin')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+	});
+
+	syncView();
+</script>
 
 <style>
-.page-shell {
-position: relative;
-padding: 40px clamp(20px, 4vw, 80px);
-max-width: 1240px;
-margin: 0 auto;
-min-height: 100vh;
-}
+	.page-shell {
+		position: relative;
+		padding: 32px clamp(16px, 4vw, 72px) 56px;
+		max-width: 1320px;
+		margin: 0 auto;
+		min-height: 100vh;
+	}
 
-.hero-panel {
-display: grid;
-grid-template-columns: 1.2fr 0.8fr;
-gap: 32px;
-align-items: center;
-padding: 48px 0;
-}
+	.app-header {
+		display: flex;
+		justify-content: space-between;
+		gap: 28px;
+		align-items: flex-end;
+		padding: 28px 0 34px;
+	}
 
-.hero-copy {
-max-width: 560px;
-}
+	.eyebrow,
+	.section-label {
+		text-transform: uppercase;
+		letter-spacing: 0.18em;
+		color: #67e8f9;
+		font-size: 0.78rem;
+		margin: 0 0 10px;
+		font-weight: 800;
+	}
 
-.eyebrow {
-text-transform: uppercase;
-letter-spacing: 0.2em;
-color: #a5b4fc;
-font-size: 0.85rem;
-margin-bottom: 18px;
-}
+	h1 {
+		font-size: clamp(2.9rem, 6vw, 5.2rem);
+		line-height: 0.92;
+		margin: 0;
+		max-width: 12ch;
+	}
 
-h1 {
-font-size: clamp(3rem, 4vw, 4.5rem);
-line-height: 0.95;
-margin: 0;
-max-width: 12ch;
-}
+	.hero-text {
+		margin: 18px 0 0;
+		max-width: 42rem;
+		font-size: 1.08rem;
+		line-height: 1.7;
+		color: #cbd5e1;
+	}
 
-.hero-text {
-margin: 24px 0;
-max-width: 42rem;
-font-size: 1.15rem;
-line-height: 1.8;
-color: #e2e8f0;
-}
+	.quick-nav {
+		display: flex;
+		gap: 8px;
+		padding: 6px;
+		border: 1px solid rgba(148, 163, 184, 0.2);
+		background: rgba(15, 23, 42, 0.72);
+		border-radius: 999px;
+	}
 
-.hero-actions {
-display: flex;
-flex-wrap: wrap;
-gap: 16px;
-}
+	.quick-nav a {
+		color: #f8fafc;
+		text-decoration: none;
+		font-weight: 800;
+		padding: 10px 14px;
+		border-radius: 999px;
+	}
 
-.cta-button,
-.secondary-button {
-display: inline-flex;
-align-items: center;
-justify-content: center;
-padding: 16px 24px;
-border-radius: 14px;
-font-weight: 700;
-text-decoration: none;
-}
+	.quick-nav a:hover {
+		background: rgba(20, 184, 166, 0.18);
+	}
 
-.cta-button {
-background: linear-gradient(90deg, #6366f1 0%, #8b5cf6 100%);
-color: white;
-box-shadow: 0 24px 60px rgba(99, 102, 241, 0.16);
-}
+	.workspace {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) minmax(360px, 0.78fr);
+		gap: 24px;
+		align-items: start;
+	}
 
-.secondary-button {
-background: rgba(255, 255, 255, 0.08);
-border: 1px solid rgba(255, 255, 255, 0.12);
-color: #f8fafc;
-}
+	.section-header {
+		max-width: 760px;
+		margin-bottom: 22px;
+	}
 
-.hero-preview {
-display: grid;
-place-items: center;
-}
+	.section-header.compact {
+		margin-bottom: 16px;
+	}
 
-.preview-card {
-background: rgba(15, 23, 42, 0.92);
-border: 1px solid rgba(255, 255, 255, 0.08);
-border-radius: 32px;
-padding: 32px;
-max-width: 480px;
-box-shadow: 0 40px 80px rgba(15, 23, 42, 0.4);
-}
+	.section-header h2,
+	.panel-header h2,
+	.admin-summary h3 {
+		font-size: clamp(1.75rem, 3vw, 2.55rem);
+		line-height: 1.05;
+		margin: 0;
+	}
 
-.badge {
-display: inline-flex;
-padding: 8px 14px;
-border-radius: 999px;
-background: rgba(99, 102, 241, 0.18);
-color: #c7d2fe;
-font-size: 0.85rem;
-font-weight: 700;
-margin-bottom: 20px;
-}
+	.section-copy {
+		margin: 12px 0 0;
+		color: #cbd5e1;
+		line-height: 1.7;
+	}
 
-.preview-card h2 {
-margin: 0 0 14px;
-font-size: 1.8rem;
-}
+	.grid-list {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 16px;
+	}
 
-.preview-card p {
-margin: 0 0 20px;
-line-height: 1.75;
-color: #cbd5e1;
-}
+	:global(.event-card),
+	.detail-panel,
+	.admin-form,
+	.admin-summary {
+		background: rgba(15, 23, 42, 0.9);
+		border: 1px solid rgba(148, 163, 184, 0.18);
+		border-radius: 8px;
+		box-shadow: 0 24px 70px rgba(2, 6, 23, 0.28);
+	}
 
-.preview-card ul {
-list-style: none;
-padding: 0;
-margin: 0;
-display: grid;
-gap: 12px;
-}
+	:global(.event-card) {
+		display: flex;
+		flex-direction: column;
+		gap: 15px;
+		min-height: 296px;
+		padding: 22px;
+		color: inherit;
+		text-align: left;
+		cursor: pointer;
+		font: inherit;
+		transition:
+			border-color 180ms ease,
+			transform 180ms ease,
+			background 180ms ease;
+	}
 
-.preview-card li {
-padding-left: 24px;
-position: relative;
-color: #e2e8f0;
-}
+	:global(.event-card:hover),
+	:global(.event-card.is-active) {
+		border-color: rgba(45, 212, 191, 0.74);
+		background: rgba(19, 78, 74, 0.52);
+		transform: translateY(-2px);
+	}
 
-.preview-card li::before {
-content: '✓';
-position: absolute;
-left: 0;
-color: #7c3aed;
-}
+	:global(.event-card.highlighted) {
+		border-color: rgba(251, 191, 36, 0.38);
+	}
 
-.section-block {
-padding: 48px 0;
-}
+	:global(.event-type) {
+		text-transform: uppercase;
+		font-size: 0.74rem;
+		letter-spacing: 0.15em;
+		color: #fbbf24;
+		font-weight: 900;
+	}
 
-.section-header {
-max-width: 760px;
-margin-bottom: 28px;
-}
+	:global(.event-card strong) {
+		display: block;
+		font-size: 1.38rem;
+		line-height: 1.15;
+	}
 
-.section-label {
-text-transform: uppercase;
-letter-spacing: 0.24em;
-color: #a5b4fc;
-font-size: 0.8rem;
-margin-bottom: 12px;
-}
+	:global(.event-description),
+	.detail-copy {
+		margin: 0;
+		color: #cbd5e1;
+		line-height: 1.65;
+	}
 
-.section-header h2 {
-font-size: clamp(2.1rem, 3vw, 3rem);
-margin: 0 0 16px;
-}
+	:global(.event-details) {
+		display: flex;
+		justify-content: space-between;
+		gap: 14px;
+		margin-top: auto;
+		font-weight: 800;
+		color: #e2e8f0;
+	}
 
-.section-copy {
-margin: 0;
-color: #cbd5e1;
-line-height: 1.8;
-}
+	:global(.event-status),
+	.button-row,
+	.panel-header {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 16px;
+	}
 
-.grid-list {
-display: grid;
-grid-template-columns: repeat(3, minmax(0, 1fr));
-gap: 24px;
-}
+	:global(.pill) {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: max-content;
+		padding: 8px 12px;
+		border-radius: 999px;
+		font-size: 0.82rem;
+		font-weight: 900;
+		white-space: nowrap;
+	}
 
-.event-card,
-.admin-card {
-background: rgba(15, 23, 42, 0.9);
-border: 1px solid rgba(255, 255, 255, 0.08);
-border-radius: 28px;
-padding: 28px;
-display: flex;
-flex-direction: column;
-gap: 18px;
-}
+	:global(.pill.available) {
+		background: rgba(34, 197, 94, 0.14);
+		color: #86efac;
+	}
 
-.event-card.highlighted {
-background: linear-gradient(180deg, rgba(79, 70, 229, 0.16), rgba(15, 23, 42, 0.95));
-border-color: rgba(99, 102, 241, 0.4);
-}
+	:global(.pill.limited) {
+		background: rgba(251, 191, 36, 0.16);
+		color: #fde68a;
+	}
 
-.event-meta span {
-text-transform: uppercase;
-font-size: 0.8rem;
-letter-spacing: 0.18em;
-color: #818cf8;
-}
+	:global(.action-link) {
+		color: #67e8f9;
+		font-weight: 900;
+		text-decoration: none;
+	}
 
-.event-meta strong {
-display: block;
-font-size: 1.45rem;
-line-height: 1.15;
-margin-top: 6px;
-}
+	.detail-panel {
+		position: sticky;
+		top: 20px;
+		padding: 26px;
+		display: grid;
+		gap: 22px;
+	}
 
-.event-description {
-margin: 0;
-color: #cbd5e1;
-line-height: 1.8;
-}
+	.stat-grid,
+	.metric-row {
+		display: grid;
+		grid-template-columns: repeat(4, minmax(0, 1fr));
+		gap: 10px;
+	}
 
-.event-details {
-display: flex;
-justify-content: space-between;
-font-weight: 700;
-color: #e2e8f0;
-}
+	.stat-grid div,
+	.metric-row div {
+		background: rgba(2, 6, 23, 0.36);
+		border: 1px solid rgba(148, 163, 184, 0.12);
+		border-radius: 8px;
+		padding: 14px;
+		min-width: 0;
+	}
 
-.event-status {
-display: flex;
-justify-content: space-between;
-align-items: center;
-gap: 16px;
-}
+	.stat-grid span,
+	.metric-row span {
+		display: block;
+		font-size: 1.15rem;
+		font-weight: 900;
+		color: #ffffff;
+		overflow-wrap: anywhere;
+	}
 
-.pill {
-display: inline-flex;
-padding: 8px 14px;
-border-radius: 999px;
-font-size: 0.85rem;
-font-weight: 700;
-}
+	.stat-grid p,
+	.metric-row p {
+		margin: 6px 0 0;
+		color: #94a3b8;
+		font-size: 0.86rem;
+	}
 
-.pill.available {
-background: rgba(34, 197, 94, 0.12);
-color: #86efac;
-}
+	.detail-split {
+		display: grid;
+		grid-template-columns: 0.9fr 1.1fr;
+		gap: 20px;
+	}
 
-.pill.sold {
-background: rgba(248, 113, 113, 0.13);
-color: #fda4af;
-}
+	.detail-split h3,
+	.activity-feed h4 {
+		margin: 0 0 12px;
+		font-size: 1rem;
+	}
 
-.action-link {
-color: #c4b5fd;
-font-weight: 700;
-text-decoration: none;
-}
+	.agenda-list,
+	.participant-list,
+	.activity-feed ul {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+		display: grid;
+		gap: 10px;
+	}
 
-.action-link:hover {
-text-decoration: underline;
-}
+	:global(.agenda-list li),
+	:global(.participant-list li),
+	.activity-feed li {
+		padding: 12px 14px;
+		background: rgba(30, 41, 59, 0.62);
+		border-radius: 8px;
+		color: #e2e8f0;
+	}
 
-.admin-grid {
-display: grid;
-grid-template-columns: repeat(3, minmax(0, 1fr));
-gap: 24px;
-}
+	:global(.participant-list span) {
+		display: block;
+		font-weight: 900;
+	}
 
-.summary-card {
-background: rgba(79, 70, 229, 0.18);
-}
+	:global(.participant-list small) {
+		display: block;
+		margin-top: 4px;
+		color: #94a3b8;
+	}
 
-.summary-card h3 {
-margin: 0;
-}
+	.admin-block {
+		padding-top: 52px;
+	}
 
-.summary-card .metric-row {
-display: grid;
-grid-template-columns: repeat(3, minmax(0, 1fr));
-gap: 16px;
-}
+	.admin-grid {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) minmax(320px, 0.48fr);
+		gap: 24px;
+		align-items: start;
+	}
 
-.summary-card .metric-row div {
-background: rgba(15, 23, 42, 0.7);
-padding: 18px;
-border-radius: 18px;
-}
+	.admin-form,
+	.admin-summary {
+		padding: 24px;
+	}
 
-.summary-card .metric-row span {
-display: block;
-font-size: 1.6rem;
-font-weight: 800;
-color: #ffffff;
-}
+	.admin-form {
+		display: grid;
+		gap: 16px;
+	}
 
-.summary-card .metric-row p,
-.small-copy {
-margin: 8px 0 0;
-color: #cbd5e1;
-}
+	.form-row {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 16px;
+	}
 
-@media (max-width: 1024px) {
-.hero-panel,
-.grid-list,
-.admin-grid {
-grid-template-columns: 1fr;
-}
+	label {
+		display: grid;
+		gap: 7px;
+		color: #cbd5e1;
+		font-size: 0.9rem;
+		font-weight: 800;
+	}
 
-.hero-panel {
-gap: 20px;
-}
-}
+	input,
+	select,
+	textarea {
+		width: 100%;
+		box-sizing: border-box;
+		border: 1px solid rgba(148, 163, 184, 0.26);
+		background: rgba(2, 6, 23, 0.48);
+		color: #f8fafc;
+		border-radius: 8px;
+		padding: 12px 13px;
+		font: inherit;
+	}
 
-@media (max-width: 680px) {
-.page-shell {
-padding: 24px 16px 32px;
-}
+	textarea {
+		resize: vertical;
+	}
 
-.hero-copy {
-text-align: center;
-}
+	.cta-button,
+	.secondary-button {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		border: 0;
+		border-radius: 8px;
+		padding: 13px 17px;
+		min-height: 46px;
+		color: white;
+		font-weight: 900;
+		text-decoration: none;
+		cursor: pointer;
+		font: inherit;
+	}
 
-.hero-actions {
-justify-content: center;
-}
+	.cta-button {
+		background: #0f766e;
+	}
 
-.preview-card {
-padding: 24px;
-}
+	.secondary-button {
+		background: rgba(255, 255, 255, 0.08);
+		border: 1px solid rgba(255, 255, 255, 0.14);
+	}
 
-.event-details,
-.event-status {
-flex-direction: column;
-align-items: flex-start;
-}
-}
+	.admin-summary {
+		display: grid;
+		gap: 20px;
+	}
+
+	.admin-summary .metric-row {
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+	}
+
+	.activity-feed {
+		display: grid;
+		gap: 10px;
+	}
+
+	@media (max-width: 1120px) {
+		.workspace,
+		.admin-grid {
+			grid-template-columns: 1fr;
+		}
+
+		.detail-panel {
+			position: static;
+		}
+	}
+
+	@media (max-width: 760px) {
+		.page-shell {
+			padding: 22px 14px 38px;
+		}
+
+		.app-header,
+		.panel-header,
+		.event-status,
+		.button-row {
+			align-items: stretch;
+			flex-direction: column;
+		}
+
+		.quick-nav {
+			width: 100%;
+			justify-content: space-between;
+			border-radius: 8px;
+		}
+
+		.quick-nav a {
+			flex: 1;
+			text-align: center;
+			border-radius: 6px;
+		}
+
+		.grid-list,
+		.detail-split,
+		.form-row,
+		.stat-grid,
+		.metric-row,
+		.admin-summary .metric-row {
+			grid-template-columns: 1fr;
+		}
+
+		:global(.event-card) {
+			min-height: auto;
+		}
+
+		:global(.event-details) {
+			flex-direction: column;
+		}
+	}
 </style>
